@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>UI Design - Weather App</title>
+    <link rel="stylesheet" href="css/font-awesome.min.css" />
+    <link rel="stylesheet" href="css/weather-icons.min.css" />
+    <link rel="stylesheet" href="css/weather-icons-wind.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+	<script src="angular.min.js"></script>
+</head>
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $location, $http) {
+//$scope.getvalues=function(){
+    $http({
+        method : "GET",
+        url : 'http://api.openweathermap.org/data/2.5/forecast?id=1273865&APPID=d3393e2aa24edf81d64570894fc8cb5e&units=metric&cnt=500'
+		
+
+    }).then(function mySuccess(response) {
+	 var r1=JSON.stringify(response)
+
+       // $scope.myWelcome = JSON.stringify(response.data);
+		$scope.city = response.data['city']['name']
+//alert(r1);
+		/*var myJSON = JSON.stringify(City);*/
+		$scope.temperature = response.data['list'][0] ['main'] ['temp'];
+		var iconcode=response.data['list'][0] ['weather'] [0] ['icon'];
+		        var iconurl = "http://openweathermap.org/img/w/" + iconcode + ".png";
+				
+						$scope.wicon=iconurl;
+
+		$scope.date = response.data['list'][0] ['main'] ['date'];
+		var d = new Date();
+		document.getElementById("demo").innerHTML = d;
+		
+		//$location.path("/weather")
+    }, function myError(response) {
+        $scope.myWelcome = response.statusText;
+    });
+	//}
+});
+</script>
+<body>
+    <div class="container" ng-controller="myCtrl">
+      <div class="app">
+        <div class="header">
+          <img src="imgs/mumbai.jpg" alt="">
+          <span class="city" id="city">
+            {{ city }}
+            <i class="fa fa-map-marker"></i>
+            <span class="today">Today</span>
+          </span>
+          <span class="weather">
+            <span class="temp" id="temperature">
+              <sup>{{temperature}}</sup>
+              <span class="unit">c</span>
+            </span>
+          <!--  <span class="wind-scale">
+              <table>
+                <tr>
+                  <td>Wind Direction</td>
+                  <td>
+                    <i class="wi wi-wind towards-45-deg"></i>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Wind Scale</td>
+                  <td>
+                    <i class="wi wi-wind-beaufort-7"></i>
+                  </td>
+                </tr>
+              </table>
+            </span>
+  <i class="wi wi-night-sleet"></i>   -->
+  <div id="icon"><img id="wicon" src={{wicon}} alt="Weather icon"></div>
+  
+            
+			<p id="demo"></p>
+            <span class="day" id ="date">{{ date }}</span>
+          </span>
+        </div>
+        <div class="body">
+          <span class="title">Weather Stats</span>
+          
+      </div>
+    </div>
+</body>
+</html>

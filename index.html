@@ -1,0 +1,54 @@
+<!doctype html>
+
+<html ng-app="myApp">
+<head>
+		<title> Transparent Login form </title>
+		<link rel="stylesheet" href="style.css">
+	
+
+	</head>
+<script src="angular.min.js"></script>
+<script src="angular-route.js"></script>	
+<script src="link.js"></script>
+
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $location, $http, $window) {
+$scope.getvalues=function(){
+    $http({
+        method : "POST",
+        url : "/validate",
+		data : {
+			 email: $scope.Email,
+			 password:$scope.password
+			 }
+    }).then(function mySuccess(response) {
+	console.log(response)
+        $scope.myWelcome = response.data;
+		//$location.path("weather.html")
+		$window.location.href = '/weather.html';
+
+    }, function myError(response) {
+        $scope.myWelcome = response.statusText;
+    });
+	}
+});
+</script>
+<body>
+	<div class="loginBox" ng-controller="myCtrl">
+		
+		<img src="./user.png" class="user">
+		<h2>Log In Here</h2>
+		<form>
+			<p>Email</p>
+			<input type="text" ng-model = "Email" placeholder="Enter Email">
+			<p>Password</p>
+			<input type="password" ng-model = "password" placeholder="Enter Password">
+			<input type="submit" ng-click = "getvalues();" value="sign In">
+			<a href="#"> Forget Password</a> 
+			
+		</form>
+	</div>
+
+	</body>
+</html>
